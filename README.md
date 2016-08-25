@@ -7,6 +7,10 @@ OR
 * Download [plugin](https://github.com/11039850/monalisa-orm/raw/master/plugins/com.tsc9526.monalisa.plugin.eclipse_1.7.0.jar) ,Place the jar to : eclipse/plugins
 * Restart Eclipse
 
+
+Full example: [Example Project](https://github.com/11039850/monalisa-example)
+
+
 ## Multiline Strings 
 
 Plugin installed, you can write multiline strings. For detail: [Multiline Syntax](https://github.com/11039850/monalisa-orm/wiki/Multiple-line%20syntax)
