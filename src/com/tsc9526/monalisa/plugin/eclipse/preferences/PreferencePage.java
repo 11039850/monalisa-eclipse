@@ -48,7 +48,7 @@ public class PreferencePage extends org.eclipse.jface.preference.PreferencePage 
 
 		CLabel label = new CLabel(parent, SWT.NULL);
 		label.setLayoutData(layout);
-		label.setText("Installed version: 1.7.0");
+		label.setText("Installed version: 1.8.0");
 
 		return label;
 	}

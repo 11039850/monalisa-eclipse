@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.tsc9526.monalisa.plugin.eclipse
 Bundle-SymbolicName: com.tsc9526.monalisa.plugin.eclipse;singleton:=true
-Bundle-Version: 1.7.0
+Bundle-Version: 1.8.0
 Bundle-Activator: com.tsc9526.monalisa.plugin.eclipse.activator.MonalisaPlugin
 Bundle-Vendor: 11039850@qq.com
 Require-Bundle: org.eclipse.core.runtime,
@@ -38,4 +38,6 @@ Export-Package:
  com.tsc9526.monalisa.plugin.eclipse.preferences
 Bundle-ClassPath: .,
  libs/gson-2.3.1.jar,
- libs/monalisa-orm-1.7.0.jar
+ libs/asm-5.0.3.jar,
+ libs/cglib-3.2.0.jar,
+ libs/monalisa-orm-1.8.0.jar

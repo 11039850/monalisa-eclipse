@@ -42,7 +42,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 
-import com.tsc9526.monalisa.orm.tools.helper.Helper;
+import com.tsc9526.monalisa.orm.tools.helper.ExceptionHelper;
 
 /**
  * 
@@ -110,7 +110,7 @@ public class SourceUnit {
 			String[] cp=JavaRuntime.computeDefaultRuntimeClassPath(project);
 			return cp;
 		} catch (CoreException e) {
-			Helper.throwRuntimeException(e);
+			ExceptionHelper.throwRuntimeException(e);
 			return null;
 		}
 	}
@@ -199,7 +199,7 @@ public class SourceUnit {
 				}
 			}			
 		}catch(JavaModelException jme){
-			Helper.throwRuntimeException(jme);
+			ExceptionHelper.throwRuntimeException(jme);
 		}	
 		return null;
 	}
@@ -211,7 +211,7 @@ public class SourceUnit {
 			IType type=getProject().findType(fullClassName);
 			return type;		
 		}catch(JavaModelException jme){
-			Helper.throwRuntimeException(jme);
+			ExceptionHelper.throwRuntimeException(jme);
 			return null;
 		}	
 	}

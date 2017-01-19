@@ -33,10 +33,11 @@ public class MonalisaStartup implements IStartup {
 	public void earlyStartup() {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				setupProcessingLogger();
+				setupProcessingLogger(); 
 			}
 	    });
 	}
+	 
 	
 	public void setupProcessingLogger(){
 		DBGenerator.plogger=new ConsoleLoggerFactory.ConsoleLogger(){

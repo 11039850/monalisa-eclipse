@@ -196,30 +196,32 @@ public class SelectMethod {
 		boolean importColumn = false;
  		
 		for (MetaColumn c : table.getColumns()) {
-			String tableName = c.getTable().getName();
-			MetaTable columnTable = DBMetadata.getTable(exchange.getDbKey(), tableName);
-			c.setTable(columnTable);
-			if (columnTable != null) {
-				MetaColumn cd = columnTable.getColumn(c.getName());
-				if (cd != null) {
-					c.setAuto(cd.isAuto());
-					c.setJavaType(cd.getJavaType());
-					c.setJdbcType(cd.getJdbcType());
-					c.setKey(cd.isKey());
-					c.setLength(cd.getLength());
-					c.setNotnull(cd.isNotnull());
-					c.setRemarks(cd.getRemarks());
-					c.setValue(cd.getValue());
+			if(c.getTable()!=null){
+				String tableName = c.getTable().getName();
+				MetaTable columnTable = DBMetadata.getTable(exchange.getDbKey(), tableName);
+				c.setTable(columnTable);
+				if (columnTable != null) {
+					MetaColumn cd = columnTable.getColumn(c.getName());
+					if (cd != null) {
+						c.setAuto(cd.isAuto());
+						c.setJavaType(cd.getJavaType());
+						c.setJdbcType(cd.getJdbcType());
+						c.setKey(cd.isKey());
+						c.setLength(cd.getLength());
+						c.setNotnull(cd.isNotnull());
+						c.setRemarks(cd.getRemarks());
+						c.setValue(cd.getValue());
 
-					imps.add(columnTable.getJavaPackage() + "." + columnTable.getJavaName());
-					imps.addAll(c.getImports());
+						imps.add(columnTable.getJavaPackage() + "." + columnTable.getJavaName());
+						imps.addAll(c.getImports());
 
-					importColumn = true;
-				} else {
-					c.setTable(null);
+						importColumn = true;
+					} else {
+						c.setTable(null);
+					}
 				}
 			}
-		}
+ 		}
 		table.setJavaName(resultClassName);
 
 		if (importColumn) {
