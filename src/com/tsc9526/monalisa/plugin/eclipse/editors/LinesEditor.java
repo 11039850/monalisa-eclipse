@@ -49,7 +49,8 @@ public class LinesEditor extends CompilationUnitEditor{
 			super.doSetInput(input);
 		}else if(input instanceof FileEditorInput){
 			super.doSetInput(new LinesJavaInput((FileEditorInput)input));
-		}else{this.getDocumentProvider();
+		}else{
+			this.getDocumentProvider();
 			super.doSetInput(input);
 		}
 	}

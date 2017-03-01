@@ -26,8 +26,9 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-import com.tsc9526.monalisa.orm.tools.helper.Helper;
 import com.tsc9526.monalisa.plugin.eclipse.resources.Resource;
+import com.tsc9526.monalisa.tools.string.MelpDate;
+import com.tsc9526.monalisa.tools.string.MelpString;
 
 /**
  * 
@@ -66,27 +67,27 @@ public class MMC extends MessageConsole {
 	}
 
 	public void info(Object message){
-		print(Helper.getTime()+" [I] "+getMessage(message)+"\r\n",SWT.COLOR_BLACK);				 
+		print(MelpDate.now()+" [I] "+getMessage(message)+"\r\n",SWT.COLOR_BLACK);				 
 	}
 	
 	public void warn(Object message){
-		print(Helper.getTime()+" [W] "+getMessage(message)+"\r\n",SWT.COLOR_DARK_YELLOW);		
+		print(MelpDate.now()+" [W] "+getMessage(message)+"\r\n",SWT.COLOR_DARK_YELLOW);		
 	}
 	
 	public void error(Object message){
-		print(Helper.getTime()+" [E] "+getMessage(message)+"\r\n",SWT.COLOR_RED);		
+		print(MelpDate.now()+" [E] "+getMessage(message)+"\r\n",SWT.COLOR_RED);		
 	}
 	
 	protected String getMessage(Object message){
 		if(message instanceof Throwable){
-			return Helper.toString((Throwable)message); 
+			return MelpString.toString((Throwable)message); 
 		}else{
 			return message==null?"NULL":message.toString();
 		} 
 	}
 	
 	public void code(String message,String code){
-		print(Helper.getTime()+" [I] "+message+"\r\n",SWT.COLOR_BLACK);
+		print(MelpDate.now()+" [I] "+message+"\r\n",SWT.COLOR_BLACK);
 		print(code+"\r\n",SWT.COLOR_BLUE);
 	}
 	 

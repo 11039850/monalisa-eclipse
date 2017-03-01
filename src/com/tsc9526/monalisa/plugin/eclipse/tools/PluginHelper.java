@@ -19,12 +19,33 @@ package com.tsc9526.monalisa.plugin.eclipse.tools;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.TagElement;
 
+import com.tsc9526.monalisa.orm.Version;
+import com.tsc9526.monalisa.plugin.eclipse.generator.LoggerClassLoader;
+import com.tsc9526.monalisa.plugin.eclipse.generator.SourceUnit;
+import com.tsc9526.monalisa.tools.io.MelpClose;
+import com.tsc9526.monalisa.tools.io.MelpFile;
+import com.tsc9526.monalisa.tools.misc.MelpException;
+import com.tsc9526.monalisa.tools.string.MelpString;
+
 /**
  * 
  * @author zzg.zhou(11039850@qq.com)
  */
 public class PluginHelper {
-
+	public static String getProjectORMVersion(SourceUnit unit){
+		String[] classpath=MelpFile.combineExistFiles(unit.getRuntimeClasspath(),unit.getPluginClasspath());
+		LoggerClassLoader loader = new LoggerClassLoader(MelpString.toURLs(classpath),ClassLoader.getSystemClassLoader()); 
+		try{
+			
+			Class<?> versionClass=loader.loadClass(Version.class.getName());
+			return (String)versionClass.getMethod("getVersion").invoke(null);
+		}catch(Exception e){
+			return MelpException.throwRuntimeException(e);
+		}finally{
+			MelpClose.close(loader);
+		}
+	}
+	
 	public static String getJavadocField(Javadoc doc,String property){
 		String value=null;	
 		if(doc!=null && doc.isDocComment()){			

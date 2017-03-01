@@ -51,14 +51,16 @@ import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 
 import com.tsc9526.monalisa.orm.Query;
+import com.tsc9526.monalisa.orm.Version;
 import com.tsc9526.monalisa.orm.annotation.Select;
-import com.tsc9526.monalisa.orm.datatable.DataMap;
-import com.tsc9526.monalisa.orm.datatable.DataTable;
-import com.tsc9526.monalisa.orm.datatable.Page;
-import com.tsc9526.monalisa.orm.tools.generator.DBExchange;
-import com.tsc9526.monalisa.orm.tools.helper.Helper;
+import com.tsc9526.monalisa.orm.generator.DBExchange;
 import com.tsc9526.monalisa.plugin.eclipse.console.HyperLink;
 import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
+import com.tsc9526.monalisa.plugin.eclipse.tools.PluginHelper;
+import com.tsc9526.monalisa.tools.datatable.DataMap;
+import com.tsc9526.monalisa.tools.datatable.DataTable;
+import com.tsc9526.monalisa.tools.datatable.Page;
+import com.tsc9526.monalisa.tools.string.MelpDate;
 
 /**
  * 
@@ -107,13 +109,17 @@ public class SelectGenerator implements SourceGenerator {
 			findSelectMethods();
 
 			if (methods.size() > 0) {
+				String version="plugin: "+Version.getVersion();
+				version+=", ORM: "+getOrmVersion();
+				
 				IResource r = unit.getUnit().getJavaElement().getResource();
 				String filePath = unit.getProjectPath() + "/" + r.getProjectRelativePath();
 
 				MMC mmc = MMC.getConsole();
-				mmc.print(Helper.getTime() + " [I] ****** Starting generate result classes from: ", SWT.COLOR_BLACK);
+				mmc.print(MelpDate.now() + " [I] ****** Starting generate result classes ******\r\n", SWT.COLOR_BLACK);
+				mmc.print(MelpDate.now() + " [I] Generate("+version+") from java file: ", SWT.COLOR_BLACK);	
 				mmc.print(new HyperLink("file://" + filePath, unit.getPackageName() + "." + unit.getUnitName()), SWT.COLOR_DARK_BLUE);
-				mmc.print(" ******\r\n", SWT.COLOR_BLACK);	
+				mmc.print("\r\n", SWT.COLOR_BLACK);	
 				
 				// Run select methods
 				SelectRun run = new SelectRun(unit);
@@ -123,6 +129,15 @@ public class SelectGenerator implements SourceGenerator {
 			}
 		} catch (Exception e) {
 			MMC.getConsole().error(e);
+		}
+	}
+	
+	private String getOrmVersion(){
+		try{
+			return PluginHelper.getProjectORMVersion(unit);
+		}catch(Exception e){
+			MMC.getConsole().error(e);
+			return "Unknow";
 		}
 	}
 
@@ -179,7 +194,7 @@ public class SelectGenerator implements SourceGenerator {
 		linkMethodText = method.getMd().getName() + "(" + linkMethodText + ")";
 
 		MMC mmc = MMC.getConsole();
-		mmc.print(Helper.getTime() + " [I] ", SWT.COLOR_BLACK);
+		mmc.print(MelpDate.now() + " [I] ", SWT.COLOR_BLACK);
 		mmc.print("Create class: ", SWT.COLOR_BLACK);
 		mmc.print(new HyperLink(linkClassUrl, linkClassText), SWT.COLOR_DARK_BLUE);
 		mmc.print(", from: [", SWT.COLOR_BLACK);

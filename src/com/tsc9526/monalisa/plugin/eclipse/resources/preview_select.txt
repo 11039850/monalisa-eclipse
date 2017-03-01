@@ -1,19 +1,19 @@
 /*
 Example:
  
-Table: user(String userId,String name)
-Table: product(int prdId,String userId,String name,float price)
+Table: user(String user_id,String name)
+Table: product(int prd_id,String user_id,String name,float price)
 */
 
 // Before save
 package example;
-import com.tsc9526.monalisa.annotation.DB;
-import com.tsc9526.monalisa.annotation.Select;
-import com.tsc9526.monalisa.query.Query;
+import com.tsc9526.monalisa.orm.annotation.DB;
+import com.tsc9526.monalisa.orm.annotation.Select;
+import com.tsc9526.monalisa.orm.Query;
 public class A{ 
 	@Select(name="UserProduct")
 	public List selectUserProduct(float price){
-		//DB: interface with annotation: com.tsc9526.monalisa.annotation.DB
+		//DB: interface with annotation: com.tsc9526.monalisa.orm.annotation.DB
 		Query q=new Query(DB); 
 		q.add("SELECT * FROM user a,product b")
 		 .add(" WHERE a.user_id=b.user_id AND b.price >= ?",price);
@@ -22,17 +22,17 @@ public class A{
 }
  
 //=======================================================================
-// After save: update the class A and auto generate result class: UserProduct
+// After saved: update the class A and auto generate class: UserProduct
 package example;
-import com.tsc9526.monalisa.annotation.DB;
-import com.tsc9526.monalisa.annotation.Select;
-import com.tsc9526.monalisa.query.Query;
+import com.tsc9526.monalisa.orm.annotation.DB;
+import com.tsc9526.monalisa.orm.annotation.Select;
+import com.tsc9526.monalisa.orm.Query;
 
 import example.a.UserProduct;
 public class A{
 	@Select(name="UserProduct")
 	public List<UserProduct> selectUserProduct(float price){
-		//DB: interface with annotation: com.tsc9526.monalisa.annotation.DB
+		//DB: interface with annotation: com.tsc9526.monalisa.orm.annotation.DB
 		Query q=new Query(DB,UserProduct.class);
 		q.add("SELECT * FROM user a,product b")
 		 .add(" WHERE a.user_id=b.user_id AND b.price >= ?",price);
@@ -43,12 +43,18 @@ public class A{
 //Create new class
 package example.a;
 public class UserProduct{
-	private String user$userId;
-	private String user$name;
+	@Column(table="user", name="user_id" ...)
+	private String userId;
+	@Column(table="user", name="name" ...)
+	private String name;
 	
+	@Column(table="product", name="prd_id" ...)
 	private int    prdId;
-	private String product$userId;
-	private String product$name;
+	@Column(table="product", name="user_id" ...)
+	private String userId2;
+	@Column(table="product", name="name" ...)
+	private String name2;
+	@Column(table="product", name="price" ...)
 	private float  price;
 	
 	//get set ... 

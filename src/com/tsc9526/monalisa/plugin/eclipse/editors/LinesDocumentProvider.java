@@ -5,7 +5,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitDocumentProvider;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IEditorInput;
 
 /**
  * 
@@ -19,13 +18,10 @@ public class LinesDocumentProvider extends CompilationUnitDocumentProvider{
 	}
 	 
 	public IDocument getDocument(Object element) {
-		 
 		return super.getDocument(element);
 	}
 	
 	public void connect(Object element) throws CoreException {
-		 System.out.println("Connect: "+element);
-		
 		super.connect(element);
 	}
 	

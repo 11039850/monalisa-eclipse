@@ -11,9 +11,9 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextStore;
 
-import com.tsc9526.monalisa.orm.parser.java.Java;
 import com.tsc9526.monalisa.plugin.eclipse.activator.MonalisaPlugin;
 import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
+import com.tsc9526.monalisa.tools.io.JavaFile;
  
 /**
  * 
@@ -21,6 +21,8 @@ import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
  */
 @SuppressWarnings("restriction")
 public class LinesDocument extends SynchronizableDocument implements IDocumentListener {
+	private boolean increase="true".equalsIgnoreCase( System.getProperty("com.tsc9526.monalisa.plugin.eclipse.editors.increase", "true"));
+	
 	private int delta=-1;
 	private List<Integer[]> linesArray=null;
  	 
@@ -61,7 +63,9 @@ public class LinesDocument extends SynchronizableDocument implements IDocumentLi
 		if(ste.getClassName().equals(ResourceTextFileBuffer.class.getName())
 			&& ste.getMethodName().equals("commitFileBufferContent")){
 			
-			text=doVersionIncrease(text);
+			if(increase){
+				text=doVersionIncrease(text);
+			}
 			
 			text=LinesCodeTransform.toJavaCode(text);
 		}	
@@ -71,7 +75,7 @@ public class LinesDocument extends SynchronizableDocument implements IDocumentLi
 	
 	protected String doVersionIncrease(String text){
 		try{
-			Java java=new Java(text);
+			JavaFile java=new JavaFile(text);
 			
 			long newVersion=java.increaseVersion();
 			if(newVersion>=0){
@@ -82,6 +86,13 @@ public class LinesDocument extends SynchronizableDocument implements IDocumentLi
 				
 				text=super.get();
 			 	
+//				IResource r = unit.getUnit().getJavaElement().getResource();
+//				String filePath = unit.getProjectPath() + "/" + r.getProjectRelativePath();
+//
+//				MMC mmc = MMC.getConsole();
+//				mmc.print(MelpDate.now() + " [I] ****** Starting generate result classes from: ", SWT.COLOR_BLACK);
+//				mmc.print(new HyperLink("file://" + filePath, unit.getPackageName() + "." + unit.getUnitName()), SWT.COLOR_DARK_BLUE);
+				
 				MMC.getConsole().info("$VERSION"+(java.isNaturalIncreasing()?"$":"")+" update to: "+newVersion);
 			}
 		}catch(Exception e){

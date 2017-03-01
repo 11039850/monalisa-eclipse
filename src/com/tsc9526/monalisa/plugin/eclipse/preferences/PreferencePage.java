@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import com.tsc9526.monalisa.orm.Version;
 import com.tsc9526.monalisa.plugin.eclipse.activator.MonalisaPlugin;
 
 /**
@@ -48,7 +49,7 @@ public class PreferencePage extends org.eclipse.jface.preference.PreferencePage 
 
 		CLabel label = new CLabel(parent, SWT.NULL);
 		label.setLayoutData(layout);
-		label.setText("Installed version: 1.8.0");
+		label.setText("Installed version: "+Version.getVersion());
 
 		return label;
 	}

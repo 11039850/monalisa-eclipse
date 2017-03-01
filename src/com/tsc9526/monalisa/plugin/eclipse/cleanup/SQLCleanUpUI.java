@@ -23,9 +23,10 @@ import org.eclipse.jdt.internal.ui.preferences.cleanup.AbstractCleanUpTabPage;
 import org.eclipse.jdt.ui.cleanup.CleanUpOptions;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+ 
 
-import com.tsc9526.monalisa.orm.tools.helper.FileHelper;
 import com.tsc9526.monalisa.plugin.eclipse.resources.Resource;
+import com.tsc9526.monalisa.tools.io.MelpFile;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class SQLCleanUpUI extends AbstractCleanUpTabPage {
 	}
 
 	public String getPreview() {	
-		return FileHelper.readToString(Resource.class.getResourceAsStream("/com/tsc9526/monalisa/plugin/eclipse/resources/preview_select.txt"),"utf-8");
+		return MelpFile.readToString(Resource.class.getResourceAsStream("/com/tsc9526/monalisa/plugin/eclipse/resources/preview_select.txt"),"utf-8");
 	}
  
 

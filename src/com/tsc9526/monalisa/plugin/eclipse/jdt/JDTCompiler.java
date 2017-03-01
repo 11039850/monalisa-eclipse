@@ -37,7 +37,8 @@ import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 
-import com.tsc9526.monalisa.orm.tools.helper.FileHelper;
+import com.tsc9526.monalisa.tools.io.MelpFile;
+ 
 
 /**
  * 
@@ -63,13 +64,13 @@ public class JDTCompiler {
 		this.dirSources=dirSources.replace('\\','/');
 		this.dirClasses=dirClasses.replace('\\','/');	
 		
-		this.classPaths=FileHelper.combineExistFiles(new String[]{dirClasses},classPaths);
+		this.classPaths=MelpFile.combineExistFiles(new String[]{dirClasses},classPaths);
 	}
  		 
 	
 	public void compile(String clazzName,String sourceCode) {
 		File file=new File(dirSources+"/"+clazzName.replace(".", "/") + ".java");
-		FileHelper.write(file,sourceCode.getBytes());
+		MelpFile.write(file,sourceCode.getBytes());
 		compile(file);
 	}
 	
@@ -87,8 +88,8 @@ public class JDTCompiler {
 	}
 	
 	public void clean(){
-		FileHelper.delete(new File(dirSources),false);
-		FileHelper.delete(new File(dirClasses),false);
+		MelpFile.delete(new File(dirSources),false);
+		MelpFile.delete(new File(dirClasses),false);
 	}
 	 
 	 
@@ -148,7 +149,7 @@ public class JDTCompiler {
 				String clazzName = join(clazzFiles[i].getCompoundName());
 				// save to disk as .class file
 				File target = new File(dirClasses+"/"+clazzName.replace(".", "/") + ".class");
-				FileHelper.write(target, clazzFiles[i].getBytes());				 
+				MelpFile.write(target, clazzFiles[i].getBytes());				 
 			}
 		}
 	};

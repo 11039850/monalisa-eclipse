@@ -19,9 +19,9 @@ package com.tsc9526.monalisa.plugin.eclipse;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 
-import com.tsc9526.monalisa.orm.tools.generator.DBGenerator;
-import com.tsc9526.monalisa.orm.tools.logger.ConsoleLoggerFactory;
+import com.tsc9526.monalisa.orm.generator.DBGenerator;
 import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
+import com.tsc9526.monalisa.tools.logger.ConsoleLoggerFactory;
 
 /**
  * 
