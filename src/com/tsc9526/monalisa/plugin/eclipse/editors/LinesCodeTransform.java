@@ -483,7 +483,7 @@ public class LinesCodeTransform {
 					while(i<line.length()){
 						char c3=line.charAt(i);
 						
-						if( (c3>='a' && c3<='z') || (c3>='A' && c3<='Z') || (c3>='0' && c3<='9') || c1=='_'){
+						if( (c3>='a' && c3<='z') || (c3>='A' && c3<='Z') || (c3>='0' && c3<='9') || c3=='_'){
 							var.append(c3);
 						}else{
 							i--;

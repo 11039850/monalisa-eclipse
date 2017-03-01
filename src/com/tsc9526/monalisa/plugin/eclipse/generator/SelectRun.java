@@ -23,24 +23,21 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.tsc9526.monalisa.orm.datasource.DataSourceManager;
 import com.tsc9526.monalisa.orm.datasource.DbProp;
-import com.tsc9526.monalisa.orm.tools.generator.DBExchange;
-import com.tsc9526.monalisa.orm.tools.generator.DBGenerator;
-import com.tsc9526.monalisa.orm.tools.helper.CloseQuietly;
-import com.tsc9526.monalisa.orm.tools.helper.FileHelper;
-import com.tsc9526.monalisa.orm.tools.helper.Helper;
-import com.tsc9526.monalisa.orm.tools.helper.JavaWriter;
-import com.tsc9526.monalisa.orm.tools.resources.PkgNames;
+import com.tsc9526.monalisa.orm.generator.DBExchange;
+import com.tsc9526.monalisa.orm.generator.DBGenerator;
 import com.tsc9526.monalisa.plugin.eclipse.editors.LinesCodeTransform;
 import com.tsc9526.monalisa.plugin.eclipse.jdt.JDTCompiler;
+import com.tsc9526.monalisa.tools.clazz.MelpClass;
+import com.tsc9526.monalisa.tools.io.JavaWriter;
+import com.tsc9526.monalisa.tools.io.MelpClose;
+import com.tsc9526.monalisa.tools.io.MelpFile;
+import com.tsc9526.monalisa.tools.string.MelpString;
 
 /**
  * 
@@ -57,7 +54,6 @@ public class SelectRun {
 		this.unit=unit;
 	}
 	 
-	
 	public List<DBExchange> run(List<SelectMethod> methods) {
 		try{
 			DbProp.CFG_ROOT_PATH=unit.getProjectPath();
@@ -83,9 +79,9 @@ public class SelectRun {
 	}	
 	
 	private String[] compile(String runCode){
-		String dirRoot=FileHelper.combinePath(DbProp.TMP_ROOT_PATH+"/sqlrun");
+		String dirRoot=MelpFile.combinePath(DbProp.TMP_ROOT_PATH+"/sqlrun");
 		 
-		String[] classpath=FileHelper.combineExistFiles(unit.getRuntimeClasspath(),unit.getPluginClasspath());
+		String[] classpath=MelpFile.combineExistFiles(unit.getRuntimeClasspath(),unit.getPluginClasspath());
 		JDTCompiler compiler=new JDTCompiler(dirRoot,classpath);
 		
 		compiler.clean();
@@ -98,7 +94,7 @@ public class SelectRun {
 		//编译调用Select的代码
 		compiler.compile(RUN_CLASS,runCode);		
 		
-		String[] classPath=FileHelper.combineExistFiles(compiler.getClasspaths(), unit.getRuntimeClasspath(),unit.getPluginClasspath());
+		String[] classPath=MelpFile.combineExistFiles(compiler.getClasspaths(), unit.getRuntimeClasspath(),unit.getPluginClasspath());
 		
 		return classPath;
 	}
@@ -126,7 +122,7 @@ public class SelectRun {
 		try {
 			List<DBExchange> exchanges = new ArrayList<DBExchange>();
 
-			loader = new LoggerClassLoader(Helper.toURLs(classPath),ClassLoader.getSystemClassLoader()); 
+			loader = new LoggerClassLoader(MelpString.toURLs(classPath),ClassLoader.getSystemClassLoader()); 
 			
 			beginProcessing(loader);
 			
@@ -134,7 +130,7 @@ public class SelectRun {
 			Object run = runClass.newInstance();
 			for (Method m : runClass.getMethods()) {
 				String name=m.getName();
-				if (OBJECT_METHODS.contains(name) == false && name.indexOf("$")>0) {
+				if (MelpClass.OBJECT_METHODS.contains(name) == false && name.indexOf("$")>0) {
 					int p=name.lastIndexOf("$");
 					int index=Integer.parseInt(name.substring(p+1));
 					try{
@@ -180,7 +176,7 @@ public class SelectRun {
 			}catch (Exception e) {
 				throw new RuntimeException(e);
 			}finally{
-				CloseQuietly.close(loader);
+				MelpClose.close(loader);
 			}
 		}
 	}
@@ -198,38 +194,5 @@ public class SelectRun {
 		
 		return exchange;
 	}
-	
-	
-	
-	public static Set<String> OBJECT_METHODS=new HashSet<String>(){		 
-		private static final long serialVersionUID = -4949935939426517392L;
-		{
-			add("equals");
-			add("getClass");
-			add("hashCode");
-			add("notify");
-			add("notifyAll");
-			add("toString");
-			add("wait");
-		}
-	};
-	
-	private class LoggerClassLoader extends URLClassLoader{
-		 
-		public LoggerClassLoader(URL[] urls,ClassLoader parent) {
-			super(urls,parent);
-		}
-		
-		protected Class<?> findClass(String name) throws ClassNotFoundException{
-			String prefix=PkgNames.ORM_LOGGER_PKG+".";
-			
-			if(name.startsWith(prefix)){
-				return Class.forName(name);
-			}else{
-				return super.findClass(name);
-			}
-		}
-	}
-
-	
+	 
 }

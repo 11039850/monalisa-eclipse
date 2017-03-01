@@ -14,45 +14,35 @@
  *	You should have received a copy of the GNU Lesser General Public License
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************************/
-package com.tsc9526.monalisa.plugin.eclipse;
+package com.tsc9526.monalisa.plugin.eclipse.generator;
 
-import org.eclipse.ui.IStartup;
-import org.eclipse.ui.PlatformUI;
+import java.net.URL;
+import java.net.URLClassLoader;
 
-import com.tsc9526.monalisa.orm.generator.DBGenerator;
-import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
-import com.tsc9526.monalisa.tools.logger.ConsoleLoggerFactory;
+import com.tsc9526.monalisa.tools.PkgNames;
 
 /**
  * 
  * @author zzg.zhou(11039850@qq.com)
  */
-
-public class MonalisaStartup implements IStartup {
- 
-	public void earlyStartup() {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				setupProcessingLogger(); 
-			}
-	    });
-	}
+public class LoggerClassLoader extends URLClassLoader{
 	 
-	
-	public void setupProcessingLogger(){
-		DBGenerator.plogger=new ConsoleLoggerFactory.ConsoleLogger(){
-			protected void write(String level,String message) {
-				MMC console=MMC.getConsole();
-				
-				if("ERROR".equalsIgnoreCase(level)){
-					console.error(message);
-				}else if("WARN".equalsIgnoreCase(level)){
-					console.warn(message);
-				}else{
-					console.info(message);
-				}
-			}
-		};
+	public LoggerClassLoader(URL[] urls,ClassLoader parent) {
+		super(urls,parent);
 	}
-
+	
+	protected Class<?> findClass(String name) throws ClassNotFoundException{
+		String prefix=PkgNames.ORM_LOGGER_PKG+".";
+		 
+		if(name.startsWith(prefix)){
+			return Class.forName(name);
+		}else{
+			return super.findClass(name);
+		}
+	}
+	
+	public URL findResource(final String name) {
+		URL r= super.findResource(name);	
+		return r;
+    }
 }

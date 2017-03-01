@@ -36,16 +36,15 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.text.edits.ReplaceEdit;
 
 import com.tsc9526.monalisa.orm.annotation.Column;
+import com.tsc9526.monalisa.orm.generator.DBExchange;
+import com.tsc9526.monalisa.orm.generator.DBWriterSelect;
 import com.tsc9526.monalisa.orm.meta.MetaColumn;
 import com.tsc9526.monalisa.orm.meta.MetaTable;
-import com.tsc9526.monalisa.orm.parser.jsp.JspContext;
-import com.tsc9526.monalisa.orm.tools.generator.DBExchange;
-import com.tsc9526.monalisa.orm.tools.generator.DBMetadata;
-import com.tsc9526.monalisa.orm.tools.generator.DBWriterSelect;
-import com.tsc9526.monalisa.orm.tools.helper.Helper;
-import com.tsc9526.monalisa.orm.tools.helper.JavaBeansHelper;
-import com.tsc9526.monalisa.orm.tools.helper.JavaWriter;
 import com.tsc9526.monalisa.plugin.eclipse.console.MMC;
+import com.tsc9526.monalisa.tools.clazz.MelpJavaBeans;
+import com.tsc9526.monalisa.tools.io.JavaWriter;
+import com.tsc9526.monalisa.tools.string.MelpString;
+import com.tsc9526.monalisa.tools.template.jsp.JspContext;
 
 /**
  * 
@@ -146,7 +145,7 @@ public class SelectMethod {
 
 				body = sb.toString();
 			}
-			this.fingerprint = Helper.intToBytesString(body.length()) + Helper.intToBytesString(body.hashCode());
+			this.fingerprint = MelpString.intToBytesString(body.length()) + MelpString.intToBytesString(body.hashCode());
 		} catch (Exception e) {
 			MMC.getConsole().error(e);
 		}
@@ -196,31 +195,13 @@ public class SelectMethod {
 		boolean importColumn = false;
  		
 		for (MetaColumn c : table.getColumns()) {
-			if(c.getTable()!=null){
-				String tableName = c.getTable().getName();
-				MetaTable columnTable = DBMetadata.getTable(exchange.getDbKey(), tableName);
-				c.setTable(columnTable);
-				if (columnTable != null) {
-					MetaColumn cd = columnTable.getColumn(c.getName());
-					if (cd != null) {
-						c.setAuto(cd.isAuto());
-						c.setJavaType(cd.getJavaType());
-						c.setJdbcType(cd.getJdbcType());
-						c.setKey(cd.isKey());
-						c.setLength(cd.getLength());
-						c.setNotnull(cd.isNotnull());
-						c.setRemarks(cd.getRemarks());
-						c.setValue(cd.getValue());
-
-						imps.add(columnTable.getJavaPackage() + "." + columnTable.getJavaName());
-						imps.addAll(c.getImports());
-
-						importColumn = true;
-					} else {
-						c.setTable(null);
-					}
-				}
+			MetaTable columnTable=c.getTable();
+			if(columnTable!=null){
+				imps.add(columnTable.getJavaPackage() + "." + columnTable.getJavaName());
+				importColumn = true;
 			}
+			
+			imps.addAll(c.getImports());
  		}
 		table.setJavaName(resultClassName);
 
@@ -275,7 +256,7 @@ public class SelectMethod {
 
 			method += "_" + t.toString();
 
-			method = JavaBeansHelper.getCamelCaseString(method, false);
+			method = MelpJavaBeans.getCamelCaseString(method, false);
 		}
 		
 		method+="$"+index;
