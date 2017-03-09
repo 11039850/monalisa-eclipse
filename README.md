@@ -29,7 +29,7 @@ Effect as shown below:
 
   Enable this option: **Enable annotation processing**
 
-Effect as shown below:
+Like this:
 
 ![image](https://github.com/11039850/monalisa-orm/raw/master/doc/images/db_save.jpg)
 
@@ -38,6 +38,6 @@ Effect as shown below:
 
   Enable this option: **@Select** 
 
-Effect as shown below:
+Like this:
 
 ![image](https://github.com/11039850/monalisa-db/raw/master/doc/images/select_save.jpg)
