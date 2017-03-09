@@ -15,6 +15,8 @@ public class LinesCodeTransform {
 	public static String regexLines = "\\\"\\s*/\\*\\*(~|=)!?[a-zA-Z_]*\\s*\\{";
 	public static String regexJava  = "\\\"\\s*\\+\\s*/\\*\\*(~|=)!?[a-zA-Z_]*\\s*\\{\\s*\\*/[\\s\\S]*?/\\*\\*\\s*\\}\\s*\\*/";
 
+	public final static char varChar    = '$';
+	
 	private static Pattern patternLines(){
 		return Pattern.compile(regexLines);
 	}
@@ -174,8 +176,8 @@ public class LinesCodeTransform {
 							}else if(x=='*' && (i+1)<v.length() && v.charAt(i+1)=='/'){ 
 								line.append("*\\/");
 								i+=1;
-							}else if(x=='$' && eval){
-								line.append("$$");
+							}else if(x==varChar && eval){
+								line.append(varChar).append(varChar);
 							}else{
 								line.append(x);
 							}
@@ -219,16 +221,16 @@ public class LinesCodeTransform {
 							}
 							 
 							if(cnt==0){
-								sb.append("${").append(v.substring(varStart,varEnd-2)).append("}");
+								sb.append(varChar).append("{").append(v.substring(varStart,varEnd-2)).append("}");
 							}
 						}else{
 							int x=v.indexOf(")",i+1);
 							if(x>0){
 								String s=v.substring(i+1,x);
-								if(s.equals("\"$\"")){
-									sb.append("$");
+								if(s.equals("\""+varChar+"\"")){
+									sb.append(varChar);
 								}else{
-									sb.append("$").append(s);
+									sb.append(varChar).append(s);
 								}
 								
 								i=x;
@@ -430,12 +432,12 @@ public class LinesCodeTransform {
 		 
 		for(int i=0;i<line.length();i++){
 			char c=line.charAt(i);
-			if(c=='$' && (i+1)<line.length() && line.charAt(i+1)=='{'){
+			if(c==varChar && (i+1)<line.length() && line.charAt(i+1)=='{'){
 				int x=line.indexOf("}",i+2);
 				String key=line.substring(i+2,x);	 
 				String value=vs.get(key);
 				if(value.length()==0){
-					value="\"$\"";
+					value="\""+varChar+"\"";
 				}
 				
 				if(key.startsWith("A")){
@@ -459,16 +461,16 @@ public class LinesCodeTransform {
 		int varIndex=0;
 		for(int i=0;i<line.length();i++){
 			char c1=line.charAt(i);
-			if(c1=='$' && (i+1)<line.length()){
+			if(c1==varChar && (i+1)<line.length()){
 				char c2=line.charAt(i+1);
-				if(c2=='$'){//双$ 表示一个$
-					sb.append("$");
+				if(c2==varChar){//two $ means one $
+					sb.append(varChar);
 					i++;
 				}else if(c2=='{'){//${...}
 					int x2=line.indexOf("}",i+1);
 					if(x2>0){
 						String varKey="A"+varIndex++;
-						sb.append("${"+varKey+"}");
+						sb.append(varChar).append("{"+varKey+"}");
 						vs.put(varKey,line.substring(i+2,x2));
 						 	
 						i=x2;
@@ -495,11 +497,11 @@ public class LinesCodeTransform {
 					}
 					
 					String varKey="B"+varIndex++;
-					sb.append("${"+varKey+"}");
+					sb.append(varChar).append("{"+varKey+"}");
 					vs.put(varKey,var.toString());
-				}else{//$ 单独一个
+				}else{//$ single 
 					vs.put("", "");
-					sb.append("${}");
+					sb.append(varChar).append("{}");
 				}
 			}else{
 				sb.append(c1);
